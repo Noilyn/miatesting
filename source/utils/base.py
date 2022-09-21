@@ -32,3 +32,12 @@ class BaseTrainer(object):
         self.set_criterion()
 
     def set_cuda_device(self):
+        """The function to set CUDA device"""
+        self.use_cuda = torch.cuda.is_available()
+        if self.use_cuda:
+            torch.set_default_tensor_type('torch.cuda.FloatTensor')
+        if hasattr(self.args, 'num_workers') and self.args.num_workers >= 1:
+            torch.multiprocessing.set_start_method('spawn')
+        self.device = torch.device("cuda" if self.use_cuda else "cpu")
+
+    
